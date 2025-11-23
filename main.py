@@ -39,11 +39,7 @@ import zipfile
 import shutil
 import ffmpeg
 import unicodedata
-
-import re
 import unicodedata
-
-import re
 
 def clean_line(text: str) -> str:
     # Normalize spacing
@@ -67,9 +63,14 @@ def clean_line(text: str) -> str:
 
 subprocess.run([
     "ffmpeg",
+    "-headers", "User-Agent: Mozilla/5.0",
+    "-headers", "Referer: https://web.classplusapp.com",
+    "-headers", "Origin: https://web.classplusapp.com",
     "-i", "https://media-cdn.classplusapp.com/alisg-cdn-a.classplusapp.com/31245720303171ee988e5401b0ea0102/master.m3u8",
-    "-c", "copy", "output.mp4"
+    "-c", "copy",
+    "output.mp4"
 ])
+
 # Initialize the bot
 bot = Client(
     "bot",
