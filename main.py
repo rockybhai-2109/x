@@ -59,6 +59,14 @@ def clean_line(text: str) -> str:
 
 
 
+def is_valid_url(url: str) -> bool:
+    return isinstance(url, str) and url.startswith(("http://", "https://"))
+
+if not url.startswith("http"):
+    print("Skipping encrypted / invalid URL")
+    return
+
+video_url = url   # resolved real m3u8 only
 
 headers = (
     "User-Agent: Mozilla/5.0\r\n"
