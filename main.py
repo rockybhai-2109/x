@@ -57,18 +57,34 @@ def clean_line(text: str) -> str:
     text = re.sub(r'\s{2,}', ' ', text)          # clean extra spaces
     return text.strip(" >")
 
+def safe_filename(name: str) -> str:
+    name = unicodedata.normalize("NFKD", name)
+    name = re.sub(r'[^\w\-. ]', '_', name)
+    name = re.sub(r'\s+', ' ', name).strip()
+    return name[:150]
+
+
+def is_valid_url(url: str) -> bool:
+    return isinstance(url, str) and url.startswith(("http://", "https://"))
+
+if not is_valid_url(video_url):
+    logger.warning("Invalid or encrypted URL skipped")
+    return
 
 
 
+headers = (
+    "User-Agent: Mozilla/5.0\r\n"
+    "Referer: https://web.classplusapp.com\r\n"
+    "Origin: https://web.classplusapp.com\r\n"
+)
 
 subprocess.run([
     "ffmpeg",
-    "-headers", "User-Agent: Mozilla/5.0",
-    "-headers", "Referer: https://web.classplusapp.com",
-    "-headers", "Origin: https://web.classplusapp.com",
-    "-i", "https://media-cdn.classplusapp.com/alisg-cdn-a.classplusapp.com/31245720303171ee988e5401b0ea0102/master.m3u8",
+    "-headers", headers,
+    "-i", video_url,
     "-c", "copy",
-    "output.mp4"
+    output
 ])
 
 # Initialize the bot
