@@ -65,13 +65,8 @@ def safe_filename(name: str) -> str:
     return name[:150]
 
 
-def is_valid_url(url: str) -> bool:
-    return isinstance(url, str) and url.startswith(("http://", "https://"))
 
-if not is_valid_url(url):
-    print("Skipping encrypted / invalid URL")
-else:
-    video_url = url
+def run_ffmpeg(video_url, output):
     output = safe_filename(output)
 
     headers = (
@@ -88,6 +83,7 @@ else:
         "-c", "copy",
         output
     ])
+
 
 
 
