@@ -70,26 +70,25 @@ def is_valid_url(url: str) -> bool:
 
 if not is_valid_url(url):
     print("Skipping encrypted / invalid URL")
-    return
+else:
+    video_url = url
+    output = safe_filename(output)
 
-video_url = url  # resolved real m3u8 only
+    headers = (
+        "User-Agent: Mozilla/5.0\r\n"
+        "Referer: https://web.classplusapp.com\r\n"
+        "Origin: https://web.classplusapp.com\r\n"
+    )
 
-output = safe_filename(output)  # 🔥 MUST
+    subprocess.run([
+        "ffmpeg",
+        "-y",
+        "-headers", headers,
+        "-i", video_url,
+        "-c", "copy",
+        output
+    ])
 
-headers = (
-    "User-Agent: Mozilla/5.0\r\n"
-    "Referer: https://web.classplusapp.com\r\n"
-    "Origin: https://web.classplusapp.com\r\n"
-)
-
-subprocess.run([
-    "ffmpeg",
-    "-y",
-    "-headers", headers,
-    "-i", video_url,
-    "-c", "copy",
-    output
-])
 
 
 # Initialize the bot
