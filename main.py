@@ -57,19 +57,6 @@ def clean_line(text: str) -> str:
     text = re.sub(r'\s{2,}', ' ', text)          # clean extra spaces
     return text.strip(" >")
 
-def safe_filename(name: str) -> str:
-    name = unicodedata.normalize("NFKD", name)
-    name = re.sub(r'[^\w\-. ]', '_', name)
-    name = re.sub(r'\s+', ' ', name).strip()
-    return name[:150]
-
-
-def is_valid_url(url: str) -> bool:
-    return isinstance(url, str) and url.startswith(("http://", "https://"))
-
-if not is_valid_url(video_url):
-    logger.warning("Invalid or encrypted URL skipped")
-    return
 
 
 
