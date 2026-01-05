@@ -58,15 +58,23 @@ def clean_line(text: str) -> str:
     return text.strip(" >")
 
 
+def safe_filename(name: str) -> str:
+    name = unicodedata.normalize("NFKD", name)
+    name = re.sub(r'[^\w\-. ]', '_', name)
+    name = re.sub(r'\s+', ' ', name).strip()
+    return name[:150]
+
 
 def is_valid_url(url: str) -> bool:
     return isinstance(url, str) and url.startswith(("http://", "https://"))
 
-if not url.startswith("http"):
+if not is_valid_url(url):
     print("Skipping encrypted / invalid URL")
     return
 
-video_url = url   # resolved real m3u8 only
+video_url = url  # resolved real m3u8 only
+
+output = safe_filename(output)  # 🔥 MUST
 
 headers = (
     "User-Agent: Mozilla/5.0\r\n"
@@ -76,11 +84,13 @@ headers = (
 
 subprocess.run([
     "ffmpeg",
+    "-y",
     "-headers", headers,
     "-i", video_url,
     "-c", "copy",
     output
 ])
+
 
 # Initialize the bot
 bot = Client(
